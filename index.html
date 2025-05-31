@@ -540,7 +540,6 @@
                 <img class="main-photo" id="photo-${idx}" src="${section.images[imgIdx]}" alt="${section.label}">
                 <div class="polaroid-date" id="date-${idx}">${section.time}</div>
               </div>
-              <div class="photo-desc" id="desc-${idx}">${section.texts[imgIdx]}</div>
               <button class="refresh-btn" onclick="refreshMemory(${idx})">refresh memory</button>
             </div>
             <div class="content-side">
@@ -559,7 +558,6 @@
       const section = sectionData[idx];
       const imgIdx = section.random ? Math.floor(Math.random() * section.images.length) : 0;
       document.getElementById(`photo-${idx}`).src = section.images[imgIdx];
-      document.getElementById(`desc-${idx}`).textContent = section.texts[imgIdx];
       document.getElementById(`memory-${idx}`).textContent = section.texts[imgIdx];
       document.getElementById(`date-${idx}`).textContent = section.time;
     }
