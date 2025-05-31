@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tables of north campus</title>
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Shadows+Into+Light&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      min-height: 100vh;
+      background: #fafbfc;
+      font-family: 'Segoe UI', sans-serif;
+      color: #222;
+    }
+    body {
+      min-height: 100vh;
+      width: 100vw;
+    }
+    h1 {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 2.2rem;
+      letter-spacing: 1px;
+      font-family: 'Shadows Into Light', cursive;
+      color: #6d5cae;
+    }
+    .timeline {
+      position: relative;
+      width: 90vw;
+      max-width: 900px;
+      margin: 3rem auto 0 auto;
+      padding-bottom: 4rem;
+    }
+    .vertical-line {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 8px;
+      height: 100%;
+      background: none;
+      z-index: 0;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+    .time-block {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      min-height: 340px;
+      margin: 4rem 0;
+      z-index: 1;
+    }
+    .time-block.even {
+      flex-direction: row-reverse;
+    }
+    .side {
+      flex: 1 1 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-end;
+      padding: 0 2rem;
+    }
+    .time-block.even .side {
+      align-items: flex-start;
+    }
+    .polaroid {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px #0002;
+      padding: 1.2rem 1.2rem 0.7rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 1.2rem;
+      border: 2px solid #eee;
+      width: 240px;
+      min-height: 320px;
+    }
+    .main-photo {
+      width: 200px;
+      height: 200px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #eee;
+      border: 1px solid #ddd;
+      display: block;
+      margin-bottom: 0.7rem;
+    }
+    .polaroid-date {
+      font-size: 1.05rem;
+      color: #7a5fa3;
+      margin-top: 0.5rem;
+      font-family: 'Courier New', Courier, monospace;
+      letter-spacing: 1px;
+      text-align: center;
+      width: 100%;
+    }
+    .photo-desc {
+      font-size: 1.08rem;
+      color: #555;
+      margin-bottom: 1.2rem;
+      text-align: center;
+      max-width: 90%;
+    }
+    .content-side {
+      flex: 1 1 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 0 2rem;
+    }
+    .time-block.even .content-side {
+      align-items: flex-end;
+    }
+    .time-title {
+      font-weight: bold;
+      font-size: 1.3rem;
+      margin-bottom: 1.2rem;
+      color: #222;
+      text-align: left;
+    }
+    .refresh-btn {
+      background: #f7e7ff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.4rem 1.1rem;
+      font-size: 1.05rem;
+      cursor: pointer;
+      margin-bottom: 1.2rem;
+      margin-top: 0.2rem;
+      transition: background 0.2s;
+    }
+    .refresh-btn:hover {
+      background: #e3cfff;
+    }
+    .memory {
+      font-size: 1.13rem;
+      margin-top: 0.7rem;
+      color: #333;
+      text-align: left;
+      margin-bottom: 1.2rem;
+      max-width: 340px;
+    }
+    .stick-figure {
+      margin: 0.5rem 0 1.2rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .gallery-section {
+      max-width: 900px;
+      margin: 4rem auto 3rem auto;
+      padding: 2rem 0 4rem 0;
+      border-top: none;
+      position: relative;
+      z-index: 1;
+    }
+    .gallery-title {
+      text-align: center;
+      font-size: 2.1rem;
+      margin-bottom: 2.5rem;
+      color: #6d5cae;
+      letter-spacing: 1px;
+      font-family: 'Shadows Into Light', cursive;
+      font-weight: 400;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      grid-auto-rows: 80px;
+      gap: 8px 8px;
+      justify-items: center;
+      align-items: start;
+      z-index: 2;
+      margin: 0 auto;
+      width: fit-content;
+      min-width: 400px;
+      background: none;
+    }
+    .gallery-polaroid {
+      background: #fff;
+      border-top: 2px solid #eee;
+      border-left: 2px solid #eee;
+      border-right: 2px solid #eee;
+      border-bottom: 22px solid #fff;
+      border-radius: 7px 7px 18px 18px;
+      box-shadow: 0 2px 8px #bfa6e022;
+      width: 70px;
+      height: 90px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      cursor: pointer;
+      position: relative;
+      transition: box-shadow 0.2s, transform 0.2s;
+      aspect-ratio: 7/9;
+      overflow: hidden;
+    }
+    .gallery-polaroid:hover {
+      box-shadow: 0 8px 24px #bfa6e033, 0 2px 8px #bfa6e022;
+      transform: translateY(-2px) scale(1.025);
+    }
+    .gallery-polaroid-img {
+      width: 54px;
+      height: 54px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin-top: 7px;
+      margin-bottom: 0.2rem;
+      background: #eee;
+      box-shadow: 0 1px 4px #0001;
+      display: block;
+    }
+    .gallery-polaroid-label {
+      font-size: 0.82rem;
+      color: #6d5cae;
+      font-family: 'Shadows Into Light', cursive;
+      letter-spacing: 0.5px;
+      text-align: center;
+      width: 100%;
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 2px;
+      z-index: 2;
+      user-select: none;
+      background: transparent;
+      padding-bottom: 2px;
+      line-height: 1.1;
+    }
+    .gallery-empty {
+      background: none !important;
+      box-shadow: none !important;
+      border: none !important;
+      pointer-events: none;
+      width: 70px;
+      height: 90px;
+      display: block;
+      visibility: hidden;
+    }
+    /* --- MODAL POLAROID --- */
+    .modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(40, 30, 60, 0.13);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .modal.active {
+      visibility: visible;
+      opacity: 1;
+    }
+    .modal-polaroid {
+      background: #fff;
+      border-top: 2.5px solid #eee;
+      border-left: 2.5px solid #eee;
+      border-right: 2.5px solid #eee;
+      border-bottom: 38px solid #fff;
+      border-radius: 16px 16px 32px 32px;
+      box-shadow: 0 8px 32px #bfa6e033, 0 2px 8px #bfa6e022;
+      width: 350px;
+      height: 430px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      perspective: 1200px;
+      position: relative;
+      cursor: pointer;
+      transition: box-shadow 0.3s, transform 0.3s;
+      aspect-ratio: 7/9;
+      overflow: hidden;
+    }
+    .modal-polaroid-inner {
+      width: 100%;
+      height: 100%;
+      transition: transform 0.7s cubic-bezier(.4,2,.6,1);
+      transform-style: preserve-3d;
+      position: relative;
+      border-radius: 16px 16px 32px 32px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .modal-polaroid.flipped .modal-polaroid-inner {
+      transform: rotateY(180deg);
+    }
+    .modal-polaroid-front, .modal-polaroid-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding-top: 24px;
+      padding-bottom: 38px;
+      border-radius: 16px 16px 32px 32px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .modal-polaroid-front img {
+      width: 260px;
+      height: 260px;
+      object-fit: cover;
+      border-radius: 10px;
+      background: #eee;
+      box-shadow: 0 1px 4px #0001;
+      margin-bottom: 0.7rem;
+      margin-top: 0.2rem;
+      display: block;
+    }
+    .modal-polaroid-label {
+      font-size: 1.18rem;
+      color: #6d5cae;
+      font-family: 'Shadows Into Light', cursive;
+      letter-spacing: 0.5px;
+      text-align: center;
+      width: 100%;
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 14px;
+      z-index: 2;
+      user-select: none;
+      background: transparent;
+      padding-bottom: 2px;
+      line-height: 1.1;
+    }
+    .modal-polaroid-back {
+      background: #fff;
+      color: #222;
+      transform: rotateY(180deg);
+      border-radius: 16px 16px 32px 32px;
+      box-shadow: 0 2px 12px #0002;
+      font-size: 1.18rem;
+      text-align: center;
+      font-family: 'Special Elite', 'Courier New', Courier, monospace;
+      padding: 2.2rem 1.2rem 1.2rem 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100px;
+      overflow: hidden;
+    }
+    .modal-close {
+      position: absolute;
+      top: 0.7rem;
+      right: 1.2rem;
+      font-size: 2.2rem;
+      color: #bfa6e0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      z-index: 10;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .modal-close:hover {
+      opacity: 1;
+    }
+    @media (max-width: 900px) {
+      .timeline {
+        max-width: 98vw;
+      }
+      .main-photo {
+        width: 90vw;
+        height: 40vw;
+        min-height: 120px;
+        max-width: 95vw;
+        max-height: 40vh;
+      }
+      .side, .content-side {
+        padding: 0 0.5rem;
+      }
+      .polaroid {
+        width: 90vw;
+        min-height: 220px;
+      }
+      .gallery-section {
+        max-width: 99vw;
+      }
+      .gallery-grid {
+        min-width: 0;
+      }
+      .gallery-polaroid {
+        width: 16vw;
+        max-width: 70px;
+        height: 21vw;
+        max-height: 90px;
+      }
+      .modal-polaroid {
+        width: 90vw;
+        max-width: 350px;
+        height: 120vw;
+        max-height: 430px;
+        padding: 0;
+      }
+      .modal-polaroid-front img {
+        width: 70vw;
+        max-width: 260px;
+        height: 70vw;
+        max-height: 260px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>tables of north campus</h1>
+  <div class="timeline" id="timeline">
+    <svg class="vertical-line" id="verticalLine" width="16" height="3000" viewBox="0 0 16 3000" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path id="doodlePath" d="M8 0 Q16 100 8 200 Q0 300 8 400 Q16 500 8 600 Q0 700 8 800 Q16 900 8 1000 Q0 1100 8 1200 Q16 1300 8 1400 Q0 1500 8 1600 Q16 1700 8 1800 Q0 1900 8 2000 Q16 2100 8 2200 Q0 2300 8 2400 Q16 2500 8 2600 Q0 2700 8 2800 Q16 2900 8 3000" stroke="#bfa6e0" stroke-width="5" stroke-dasharray="12,14" fill="none"/>
+    </svg>
+    <!-- Time blocks will be injected here by JS -->
+  </div>
+  <div class="gallery-section" id="gallerySection">
+    <div class="gallery-title">the polaroid wall</div>
+    <div class="gallery-grid" id="galleryGrid"></div>
+  </div>
+  <div class="modal" id="modal">
+    <div class="modal-polaroid" id="modalPolaroid">
+      <button class="modal-close" id="modalClose" title="Close">&times;</button>
+      <div class="modal-polaroid-inner" id="modalPolaroidInner">
+        <div class="modal-polaroid-front" id="modalFront">
+          <img id="modalPhoto" src="" alt="Polaroid">
+          <div class="modal-polaroid-label" id="modalLabel"></div>
+        </div>
+        <div class="modal-polaroid-back" id="modalBack">
+          <div id="modalMemory"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    // --- SECTION DATA ---
+    // Edit these arrays/objects to change the text for each photo/section!
+    const sectionData = [
+      // 10:00 am - gate-1
+      {
+        time: '10:00 am',
+        images: ['maanya photos/gate-1.jpg'],
+        texts: ['Arriving at the gate, the start of our day.'],
+        label: 'gate-1',
+      },
+      // 10:20 am - car-1 to car-4 (random)
+      {
+        time: '10:20 am',
+        images: [
+          'maanya photos/car-1.jpg',
+          'maanya photos/car-2.jpg',
+          'maanya photos/car-3.jpg',
+          'maanya photos/car-4.jpg',
+        ],
+        texts: [
+          'Car ride, playlist on, windows down.',
+          'Laughing in the backseat, sun streaming in.',
+          'You always pick the best route.',
+          'Coffee in hand, ready for the day.'
+        ],
+        label: 'car',
+        random: true
+      },
+      // 10:40 am - steps-1 to steps-3
+      {
+        time: '10:40 am',
+        images: [
+          'maanya photos/steps-1.jpg',
+          'maanya photos/steps-2.jpg',
+          'maanya photos/steps-3.jpg',
+        ],
+        texts: [
+          'Counting steps, counting stories.',
+          'You always walk ahead, I follow.',
+          'The stairs where we pause and talk.'
+        ],
+        label: 'steps',
+        random: true
+      },
+      // 11:00 am - starbucks-1 to starbucks-6
+      {
+        time: '11:00 am',
+        images: [
+          'maanya photos/starbucks-1.jpg',
+          'maanya photos/starbucks-2.jpg',
+          'maanya photos/starbucks-3.jpg',
+          'maanya photos/starbucks-4.jpg',
+          'maanya photos/starbucks-5.jpg',
+          'maanya photos/starbucks-6.jpg',
+        ],
+        texts: [
+          'First sip, first smile.',
+          'You order for both of us.',
+          'Window seat, people watching.',
+          'Our table, our time.',
+          'You always get extra whipped cream.',
+          'Sharing secrets over coffee.'
+        ],
+        label: 'starbucks',
+        random: true
+      },
+      // 11:00 am part 2 - random-1 to random-8
+      {
+        time: '11:00 am (part 2)',
+        images: [
+          'maanya photos/random-1.jpg',
+          'maanya photos/random-2.jpg',
+          'maanya photos/random-3.jpg',
+          'maanya photos/random-4.jpg',
+          'maanya photos/random-5.jpg',
+          'maanya photos/random-6.jpg',
+          'maanya photos/random-7.jpg',
+          'maanya photos/random-8.jpg',
+        ],
+        texts: [
+          'A moment in between.',
+          'Unexpected laughter.',
+          'You caught me off guard.',
+          'A quick photo, a lasting memory.',
+          'We always find something new.',
+          'You and your candid shots.',
+          'A pause before we go.',
+          'The best moments are unplanned.'
+        ],
+        label: 'random',
+        random: true
+      }
+    ];
+
+    // --- RENDER MAIN SECTIONS ---
+    function renderSections() {
+      const main = document.getElementById('timeline');
+      sectionData.forEach((section, idx) => {
+        let imgIdx = 0;
+        if (section.random) {
+          imgIdx = Math.floor(Math.random() * section.images.length);
+        }
+        const even = idx % 2 === 1;
+        const blockId = `block-${idx}`;
+        const html = `
+          <div class="time-block${even ? ' even' : ''}">
+            <div class="side">
+              <div class="polaroid" id="polaroid-${idx}">
+                <img class="main-photo" id="photo-${idx}" src="${section.images[imgIdx]}" alt="${section.label}">
+                <div class="polaroid-date" id="date-${idx}">${section.time}</div>
+              </div>
+              <div class="photo-desc" id="desc-${idx}">${section.texts[imgIdx]}</div>
+              <button class="refresh-btn" onclick="refreshMemory(${idx})">refresh memory</button>
+            </div>
+            <div class="content-side">
+              <div class="time-title">at ${section.time}</div>
+              <div class="memory" id="memory-${idx}">${section.texts[imgIdx]}</div>
+              <div class="stick-figure">${stickFigures[section.label]}</div>
+            </div>
+          </div>
+        `;
+        main.insertAdjacentHTML('beforeend', html);
+      });
+    }
+
+    // --- Refresh memory/photo for a time block ---
+    window.refreshMemory = function(idx) {
+      const section = sectionData[idx];
+      const imgIdx = section.random ? Math.floor(Math.random() * section.images.length) : 0;
+      document.getElementById(`photo-${idx}`).src = section.images[imgIdx];
+      document.getElementById(`desc-${idx}`).textContent = section.texts[imgIdx];
+      document.getElementById(`memory-${idx}`).textContent = section.texts[imgIdx];
+      document.getElementById(`date-${idx}`).textContent = section.time;
+    }
+
+    // --- Stick figure SVGs ---
+    const stickFigures = {
+      single: `<svg width="60" height="100" viewBox="0 0 40 80" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="12" r="10" stroke="#222" stroke-width="2"/><line x1="20" y1="22" x2="20" y2="55" stroke="#222" stroke-width="2"/><line x1="20" y1="30" x2="8" y2="45" stroke="#222" stroke-width="2"/><line x1="20" y1="30" x2="32" y2="45" stroke="#222" stroke-width="2"/><line x1="20" y1="55" x2="10" y2="75" stroke="#222" stroke-width="2"/><line x1="20" y1="55" x2="30" y2="75" stroke="#222" stroke-width="2"/></svg>`,
+      double: `<svg width="90" height="100" viewBox="0 0 60 80" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="15" cy="12" r="10" stroke="#222" stroke-width="2"/><circle cx="45" cy="12" r="10" stroke="#222" stroke-width="2"/><line x1="15" y1="22" x2="15" y2="55" stroke="#222" stroke-width="2"/><line x1="45" y1="22" x2="45" y2="55" stroke="#222" stroke-width="2"/><line x1="15" y1="30" x2="3" y2="45" stroke="#222" stroke-width="2"/><line x1="15" y1="30" x2="27" y2="45" stroke="#222" stroke-width="2"/><line x1="45" y1="30" x2="33" y2="45" stroke="#222" stroke-width="2"/><line x1="45" y1="30" x2="57" y2="45" stroke="#222" stroke-width="2"/><line x1="15" y1="55" x2="5" y2="75" stroke="#222" stroke-width="2"/><line x1="15" y1="55" x2="25" y2="75" stroke="#222" stroke-width="2"/><line x1="45" y1="55" x2="35" y2="75" stroke="#222" stroke-width="2"/><line x1="45" y1="55" x2="55" y2="75" stroke="#222" stroke-width="2"/></svg>`,
+      group: `<svg width="150" height="100" viewBox="0 0 100 80" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="12" r="10" stroke="#222" stroke-width="2"/><circle cx="50" cy="12" r="10" stroke="#222" stroke-width="2"/><circle cx="80" cy="12" r="10" stroke="#222" stroke-width="2"/><line x1="20" y1="22" x2="20" y2="55" stroke="#222" stroke-width="2"/><line x1="50" y1="22" x2="50" y2="55" stroke="#222" stroke-width="2"/><line x1="80" y1="22" x2="80" y2="55" stroke="#222" stroke-width="2"/><line x1="20" y1="30" x2="8" y2="45" stroke="#222" stroke-width="2"/><line x1="20" y1="30" x2="32" y2="45" stroke="#222" stroke-width="2"/><line x1="50" y1="30" x2="38" y2="45" stroke="#222" stroke-width="2"/><line x1="50" y1="30" x2="62" y2="45" stroke="#222" stroke-width="2"/><line x1="80" y1="30" x2="68" y2="45" stroke="#222" stroke-width="2"/><line x1="80" y1="30" x2="92" y2="45" stroke="#222" stroke-width="2"/><line x1="20" y1="55" x2="10" y2="75" stroke="#222" stroke-width="2"/><line x1="20" y1="55" x2="30" y2="75" stroke="#222" stroke-width="2"/><line x1="50" y1="55" x2="40" y2="75" stroke="#222" stroke-width="2"/><line x1="50" y1="55" x2="60" y2="75" stroke="#222" stroke-width="2"/><line x1="80" y1="55" x2="70" y2="75" stroke="#222" stroke-width="2"/><line x1="80" y1="55" x2="90" y2="75" stroke="#222" stroke-width="2"/></svg>`,
+    };
+
+    // --- POLAROID WALL HEART SHAPE (22 photos) ---
+    // 7x7 grid, 22 polaroids in a heart
+    const heartGrid = [
+      [0,0,1,1,1,0,0],
+      [0,1,1,1,1,1,0],
+      [1,1,1,1,1,1,1],
+      [1,1,1,1,1,1,1],
+      [0,1,1,1,1,1,0],
+      [0,0,1,1,1,0,0],
+      [0,0,0,1,0,0,0],
+    ];
+    // 22 polaroids
+    const polaroids = Array.from({length: 22}, (_, i) => {
+      const img = `maanya photos/polaroid-${String(i+1).padStart(2,'0')}.jpg`;
+      return {
+        src: img,
+        label: `Polaroid memory #${i+1}`,
+      };
+    });
+
+    function renderGallery() {
+      const grid = document.getElementById('galleryGrid');
+      grid.innerHTML = '';
+      let polaroidIdx = 0;
+      for (let row = 0; row < heartGrid.length; row++) {
+        for (let col = 0; col < heartGrid[row].length; col++) {
+          if (heartGrid[row][col] && polaroidIdx < polaroids.length) {
+            const p = polaroids[polaroidIdx++];
+            const polaroid = document.createElement('div');
+            polaroid.className = 'gallery-polaroid';
+            polaroid.innerHTML = `
+              <img class="gallery-polaroid-img" src="${p.src}" alt="gallery polaroid">
+              <div class="gallery-polaroid-label">${p.label}</div>
+            `;
+            grid.appendChild(polaroid);
+          } else {
+            // Empty cell for heart shape
+            const empty = document.createElement('div');
+            empty.className = 'gallery-empty';
+            grid.appendChild(empty);
+          }
+        }
+      }
+    }
+
+    // --- Modal logic for gallery polaroids ---
+    const modal = document.getElementById('modal');
+    const modalPolaroid = document.getElementById('modalPolaroid');
+    const modalPolaroidInner = document.getElementById('modalPolaroidInner');
+    const modalPhoto = document.getElementById('modalPhoto');
+    const modalLabel = document.getElementById('modalLabel');
+    const modalMemory = document.getElementById('modalMemory');
+    const modalClose = document.getElementById('modalClose');
+    let modalFlipped = false;
+
+    function openModal(polaroid) {
+      modalPhoto.src = polaroid.src;
+      modalLabel.textContent = polaroid.label;
+      modalMemory.textContent = polaroid.label;
+      modal.classList.add('active');
+      modalPolaroid.classList.remove('flipped');
+      modalFlipped = false;
+    }
+    function closeModal() {
+      modal.classList.remove('active');
+      modalPolaroid.classList.remove('flipped');
+      modalFlipped = false;
+    }
+    modalClose.onclick = closeModal;
+    modal.onclick = function(e) {
+      if (e.target === modal) closeModal();
+    };
+    modalPolaroid.onclick = function(e) {
+      if (e.target === modalClose) return;
+      modalFlipped = !modalFlipped;
+      if (modalFlipped) {
+        modalPolaroid.classList.add('flipped');
+      } else {
+        modalPolaroid.classList.remove('flipped');
+      }
+    };
+    window.addEventListener('keydown', function(e) {
+      if (modal.classList.contains('active') && (e.key === 'Escape' || e.key === ' ')) {
+        closeModal();
+      }
+    });
+
+    // --- Initialize ---
+    renderSections();
+    renderGallery();
+  </script>
+</body>
+</html>
